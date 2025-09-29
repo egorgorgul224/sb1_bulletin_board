@@ -1,8 +1,9 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
+
 class User(AbstractUser):
-    """Модель пользователь. Содержит поля email, phone, avatar."""
+    """Модель пользователь. Содержит поля email, role, phone, image, token."""
 
     ROLE_CHOICES = [("user", "Пользователь"), ("admin", "Администратор")]
 
