@@ -16,7 +16,6 @@
      - [Вспомогательные функции](#ads_services)
      - [Сериализация](#ads_serialize)
      - [Пагинаторы](#ads_paginators)
-     - [Валидаторы](#ads_validators)
    - [Приложение Users](#users_app)
      - [Модели](#users_models) 
      - [Контроллеры и ссылки](#users_controllers)
@@ -109,10 +108,33 @@ poetry install
 ### Контроллеры и ссылки<a id="ads_controllers"></a>
 
 1. Контроллеры модели **Ad**.
-   - Контроллер AdsCreateAPIView для создания объявления.
+   - Контроллер AdCreateAPIView для создания объявления.
+   - Контроллер AdListAPIView для вывода списка своих объявлений(если admin, то всех).
+   - Контроллер AdRetrieveAPIView для вывода информации об объявлении.
+   - Контроллер AdUpdateAPIView для обновления информации объявления.
+   - Контроллер AdDestroyAPIView для удаления объявления.
 
 ```
-Ссылка для контроллера AdsListAPIView: адрес//
+Ссылка для контроллера AdCreateAPIView: адрес/ad/create/
+Ссылка для контроллера AdListAPIView: адрес/ads/
+Ссылка для контроллера AdRetrieveAPIView: адрес/ad/id_объявления/detail/
+Ссылка для контроллера AdUpdateAPIView: адрес/ad/id_объявления/update/
+Ссылка для контроллера AdDestroyAPIView: адрес/ad/id_объявления/delete/
+```
+
+2. Контроллеры модели **Review**.
+   - Контроллер ReviewCreateAPIView для создания отзыва.
+   - Контроллер ReviewListAPIView для вывода списка отзывов.
+   - Контроллер ReviewRetrieveAPIView для вывода информации об отзыве.
+   - Контроллер ReviewUpdateAPIView для обновления информации отзыва.
+   - Контроллер ReviewDestroyAPIView для удаления отзыва.
+
+```
+Ссылка для контроллера ReviewCreateAPIView: адрес/review/create/
+Ссылка для контроллера ReviewListAPIView: адрес/reviews/
+Ссылка для контроллера ReviewRetrieveAPIView: адрес/review/id_отзыва/detail/
+Ссылка для контроллера ReviewUpdateAPIView: адрес/review/id_отзыва/update/
+Ссылка для контроллера ReviewDestroyAPIView: адрес/review/id_отзыва/delete/
 ```
 
 ### Вспомогательные функции Services<a id="ads_services"></a>
@@ -129,11 +151,6 @@ poetry install
 
 Реализована следующие пагинаторы:
 1. **123** - пагинатор для .
-
-### Валидаторы<a id="ads_validators"></a>
-
-Реализованы следующие валидаторы:
-1. **123** - класс-валидатор для .
 
 ---
 

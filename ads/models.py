@@ -6,7 +6,7 @@ from config import settings
 class Ad(models.Model):
     """Модель объявление. Содержит поля title, price, description, author, created_at."""
 
-    title = models.CharField(max_length=100, null=True, blank=True, verbose_name="Название товара")
+    title = models.CharField(max_length=100, verbose_name="Название товара")
     price = models.PositiveBigIntegerField(verbose_name="Цена товара")
     description = models.TextField(null=True, blank=True, verbose_name="Описание товара")
     author = models.ForeignKey(
@@ -26,7 +26,7 @@ class Ad(models.Model):
 class Review(models.Model):
     """Модель отзыв. Содержит поля text, author, ad, created_at."""
 
-    text = models.TextField(null=True, blank=True, verbose_name="Текст отзыва")
+    text = models.TextField(verbose_name="Текст отзыва")
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, related_name="author_reviews", blank=True, null=True
     )
