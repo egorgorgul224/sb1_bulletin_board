@@ -10,7 +10,7 @@
 2. [Установка и настройка проекта](#instruction)
 3. [Структура проекта](#structure)
 4. [Приложения](#apps)
-   - [Приложение Habits](#ads_app)
+   - [Приложение Ads](#ads_app)
      - [Модели](#ads_models) 
      - [Контроллеры и ссылки](#ads_controllers)
      - [Вспомогательные функции](#ads_services)
@@ -73,7 +73,6 @@ poetry install
 │     ├── commands - папка с командами
 │         ├── createadmin - команда для создания суперпользователя(админа)
 │ ├── migrations - папка с миграциями
-│ ├── templates - папка с шаблонами страниц
 │ ├── admin.py, apps.py, models.py, oermissions.py, serializers.py, services.py, tests.py, urls.py, views.py - модули
 для работы приложения
 ├── .env.example - env экземпляр для доступа к закрытым данным
@@ -153,16 +152,28 @@ poetry install
 
 1. Контроллеры модели **User**.
    - Контроллер UserCreateAPIView для регистрации/создания пользователя.
+   - Контроллер UserListAPIView для вывода списка пользователей.
+   - Контроллер UserRetrieveAPIView для вывода информации о пользователе.
+   - Контроллер UserUpdateAPIView для обновления информации о пользователе.
+   - Контроллер UserDestroyAPIView для удаления пользователя.
 
 ```
 Ссылка для контроллера UserCreateAPIView: адрес/register/
+Ссылка для контроллера авторизации и получения токена TokenObtainPairView: адрес/login/
+Ссылка для контроллера обновления токена TokenRefreshView: адрес/token/refresh/
+Ссылка для контроллера UserListAPIView: адрес/users/
+Ссылка для контроллера UserRetrieveAPIView: адрес/user/id_пользователя/detail/
+Ссылка для контроллера UserUpdateAPIView: адрес/user/id_пользователя/update/
+Ссылка для контроллера UserDestroyAPIView: адрес/user/id_пользователя/delete/
 ```
 
 ### Сериализация<a id="users_serialize"></a>
 
 Реализованы следующие сериализации:
 1. **UserSerializer** - сериализатор для модели User. В Meta класс предоставлен доступ к полям: first_name, last_name,
-city, phone, tg_chat_id.
+phone, email.
+2. **RegisterUserSerializer** - сериализатор для контроллера UserCreateAPIView. Используется для регистрации/создания
+пользователя. Предоставлен доступ к полям: email.
 
 ### Классы разрешений<a id="users_permissions"></a>
 
