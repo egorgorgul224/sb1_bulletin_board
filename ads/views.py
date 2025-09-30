@@ -1,9 +1,11 @@
 from rest_framework import generics
 from rest_framework.filters import SearchFilter
+from rest_framework.permissions import AllowAny
 
 from ads.models import Ad, Review
 from ads.paginators import AdListPaginator
 from ads.serializers import AdSerializer, ReviewSerializer
+from users.permissions import IsAdReviewOwner
 
 
 class AdCreateAPIView(generics.CreateAPIView):
@@ -23,20 +25,13 @@ class AdListAPIView(generics.ListAPIView):
     """Класс generics модели Ad для вывода списка объявлений."""
 
     serializer_class = AdSerializer
+    permission_classes = (AllowAny,)
+    queryset = Ad.objects.all()
     pagination_class = AdListPaginator
     filter_backends = [
         SearchFilter,
     ]
     search_fields = ("title",)
-
-    def get_queryset(self):
-        """Функция для получения списка объявлений. Если админ - то все, пользователь - только свои."""
-
-        user = self.request.user
-        if user.is_superuser:
-            return Ad.objects.all()
-        else:
-            return Ad.objects.filter(author=self.request.user.id)
 
 
 class AdRetrieveAPIView(generics.RetrieveAPIView):
@@ -51,12 +46,18 @@ class AdUpdateAPIView(generics.UpdateAPIView):
 
     serializer_class = AdSerializer
     queryset = Ad.objects.all()
+    permission_classes = [
+        IsAdReviewOwner,
+    ]
 
 
 class AdDestroyAPIView(generics.DestroyAPIView):
     """Класс generics модели Ad для удаления объявления."""
 
     queryset = Ad.objects.all()
+    permission_classes = [
+        IsAdReviewOwner,
+    ]
 
 
 class ReviewCreateAPIView(generics.CreateAPIView):
@@ -80,11 +81,7 @@ class ReviewListAPIView(generics.ListAPIView):
     def get_queryset(self):
         """Функция для получения списка отзывов. Если админ - то все, пользователь - только свои."""
 
-        user = self.request.user
-        if user.is_superuser:
-            return Review.objects.filter(ad=self.kwargs.get("pk"))
-        else:
-            return Review.objects.filter(author=self.request.user.id).filter(ad=self.kwargs.get("pk"))
+        return Review.objects.filter(ad=self.kwargs.get("pk"))
 
 
 class ReviewRetrieveAPIView(generics.RetrieveAPIView):
@@ -92,6 +89,9 @@ class ReviewRetrieveAPIView(generics.RetrieveAPIView):
 
     serializer_class = ReviewSerializer
     queryset = Review.objects.all()
+    permission_classes = [
+        IsAdReviewOwner,
+    ]
 
 
 class ReviewUpdateAPIView(generics.UpdateAPIView):
@@ -99,6 +99,9 @@ class ReviewUpdateAPIView(generics.UpdateAPIView):
 
     serializer_class = ReviewSerializer
     queryset = Review.objects.all()
+    permission_classes = [
+        IsAdReviewOwner,
+    ]
 
 
 class ReviewDestroyAPIView(generics.DestroyAPIView):

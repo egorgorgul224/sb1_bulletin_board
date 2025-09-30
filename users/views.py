@@ -2,6 +2,7 @@ from rest_framework import generics
 from rest_framework.permissions import AllowAny
 
 from users.models import User
+from users.permissions import IsAccountOwner
 from users.serializers import RegisterUserSerializer, UserSerializer
 
 
@@ -23,6 +24,9 @@ class UserRetrieveAPIView(generics.RetrieveAPIView):
 
     serializer_class = UserSerializer
     queryset = User.objects.all()
+    permission_classes = [
+        IsAccountOwner,
+    ]
 
 
 class UserUpdateAPIView(generics.UpdateAPIView):
@@ -30,6 +34,9 @@ class UserUpdateAPIView(generics.UpdateAPIView):
 
     serializer_class = UserSerializer
     queryset = User.objects.all()
+    permission_classes = [
+        IsAccountOwner,
+    ]
 
 
 class UserDestroyAPIView(generics.DestroyAPIView):
@@ -43,6 +50,9 @@ class UserListAPIView(generics.ListAPIView):
 
     serializer_class = UserSerializer
     queryset = User.objects.filter(is_staff=False)
+    permission_classes = [
+        IsAccountOwner,
+    ]
 
     def get_serializer_class(self):
         """Метод для вывода необходимого сериализатора. Если пользователь 'staff' - выводится вся информация через
