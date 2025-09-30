@@ -16,7 +16,7 @@ urlpatterns = [
     path("ad/<int:pk>/delete/", AdDestroyAPIView.as_view(), name="ad_delete"),
     # ссылки для модели Review отзыв
     path("review/create/", ReviewCreateAPIView.as_view(), name="review_create"),
-    path("reviews/", ReviewListAPIView.as_view(), name="review_list"),
+    path("ad/<int:pk>/reviews/", ReviewListAPIView.as_view(), name="review_list"),
     path("review/<int:pk>/detail/", ReviewRetrieveAPIView.as_view(), name="review_detail"),
     path("review/<int:pk>/update/", ReviewUpdateAPIView.as_view(), name="review_update"),
     path("review/<int:pk>/delete/", ReviewDestroyAPIView.as_view(), name="review_delete"),

@@ -1,6 +1,8 @@
 from rest_framework import generics
+from rest_framework.filters import SearchFilter
 
 from ads.models import Ad, Review
+from ads.paginators import AdListPaginator
 from ads.serializers import AdSerializer, ReviewSerializer
 
 
@@ -21,6 +23,11 @@ class AdListAPIView(generics.ListAPIView):
     """Класс generics модели Ad для вывода списка объявлений."""
 
     serializer_class = AdSerializer
+    pagination_class = AdListPaginator
+    filter_backends = [
+        SearchFilter,
+    ]
+    search_fields = ("title",)
 
     def get_queryset(self):
         """Функция для получения списка объявлений. Если админ - то все, пользователь - только свои."""
@@ -75,9 +82,9 @@ class ReviewListAPIView(generics.ListAPIView):
 
         user = self.request.user
         if user.is_superuser:
-            return Review.objects.all()
+            return Review.objects.filter(ad=self.kwargs.get("pk"))
         else:
-            return Review.objects.filter(author=self.request.user.id)
+            return Review.objects.filter(author=self.request.user.id).filter(ad=self.kwargs.get("pk"))
 
 
 class ReviewRetrieveAPIView(generics.RetrieveAPIView):
