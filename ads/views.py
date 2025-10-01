@@ -5,7 +5,7 @@ from rest_framework.permissions import AllowAny
 from ads.models import Ad, Review
 from ads.paginators import AdListPaginator
 from ads.serializers import AdSerializer, ReviewSerializer
-from users.permissions import IsAdReviewOwner
+from users.permissions import IsAdmin, IsAdReviewOwner
 
 
 class AdCreateAPIView(generics.CreateAPIView):
@@ -46,18 +46,14 @@ class AdUpdateAPIView(generics.UpdateAPIView):
 
     serializer_class = AdSerializer
     queryset = Ad.objects.all()
-    permission_classes = [
-        IsAdReviewOwner,
-    ]
+    permission_classes = [IsAdmin | IsAdReviewOwner]
 
 
 class AdDestroyAPIView(generics.DestroyAPIView):
     """Класс generics модели Ad для удаления объявления."""
 
     queryset = Ad.objects.all()
-    permission_classes = [
-        IsAdReviewOwner,
-    ]
+    permission_classes = [IsAdmin | IsAdReviewOwner]
 
 
 class ReviewCreateAPIView(generics.CreateAPIView):
@@ -89,9 +85,6 @@ class ReviewRetrieveAPIView(generics.RetrieveAPIView):
 
     serializer_class = ReviewSerializer
     queryset = Review.objects.all()
-    permission_classes = [
-        IsAdReviewOwner,
-    ]
 
 
 class ReviewUpdateAPIView(generics.UpdateAPIView):
@@ -99,12 +92,11 @@ class ReviewUpdateAPIView(generics.UpdateAPIView):
 
     serializer_class = ReviewSerializer
     queryset = Review.objects.all()
-    permission_classes = [
-        IsAdReviewOwner,
-    ]
+    permission_classes = [IsAdmin | IsAdReviewOwner]
 
 
 class ReviewDestroyAPIView(generics.DestroyAPIView):
     """Класс generics модели Review для удаления отзыва."""
 
     queryset = Review.objects.all()
+    permission_classes = [IsAdmin | IsAdReviewOwner]

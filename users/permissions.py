@@ -11,6 +11,15 @@ class IsAdReviewOwner(BasePermission):
         return False
 
 
+class IsAdmin(BasePermission):
+    """Класс проверяет, что пользователь является админом. Если админ - возвращает True, иначе False."""
+
+    def has_object_permission(self, request, view, obj):
+        if request.user.role == "admin":
+            return True
+        return False
+
+
 class IsAccountOwner(BasePermission):
     """Класс проверяет, что пользователь является владельцем аккаунта. Если владелец - возвращает True, иначе False."""
 

@@ -130,7 +130,7 @@ poetry install
 
 ```
 Ссылка для контроллера ReviewCreateAPIView: адрес/review/create/
-Ссылка для контроллера ReviewListAPIView: адрес/reviews/
+Ссылка для контроллера ReviewListAPIView: адрес/ad/id_объявления/reviews/
 Ссылка для контроллера ReviewRetrieveAPIView: адрес/review/id_отзыва/detail/
 Ссылка для контроллера ReviewUpdateAPIView: адрес/review/id_отзыва/update/
 Ссылка для контроллера ReviewDestroyAPIView: адрес/review/id_отзыва/delete/
@@ -183,8 +183,10 @@ poetry install
 
 Реализованы следующие сериализации:
 1. **UserSerializer** - сериализатор для модели User. В Meta класс предоставлен доступ к полям: first_name, last_name,
-phone, email.
-2. **RegisterUserSerializer** - сериализатор для контроллера UserCreateAPIView. Используется для регистрации/создания
+phone, email, date_joined.
+2. **UserMinInfoSerializer** - Дополнительная сериализация модели User для обычных пользователей. Предоставлен доступ
+к полям: last_name, first_name, date_joined.
+3. **RegisterUserSerializer** - сериализатор для контроллера UserCreateAPIView. Используется для регистрации/создания
 пользователя. Предоставлен доступ к полям: email.
 
 ### Классы разрешений<a id="users_permissions"></a>
@@ -194,6 +196,7 @@ phone, email.
 возвращает True, иначе False.
 2. **IsAccountOwner** - проверяет, что пользователь является владельцем аккаунта. Если владелец - возвращает True,
 иначе False.
+3. **IsAdmin** - проверяет, что пользователь является админом. Если админ - возвращает True, иначе False.
 
 ---
 
@@ -210,6 +213,7 @@ phone, email.
 3. Для просмотра документации введите в адресной строке:
 ```
 http://127.0.0.1:8000/swagger/ - документация в swagger
+http://127.0.0.1:8000/redoc/ - документация в redoc
 ```
 
 ---

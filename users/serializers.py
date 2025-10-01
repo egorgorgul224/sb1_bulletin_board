@@ -4,11 +4,20 @@ from users.models import User
 
 
 class UserSerializer(serializers.ModelSerializer):
-    """Сериализация модели User. Предоставлен доступ доступ к полям: email, first_name, last_name, phone."""
+    """Сериализация модели User. Предоставлен доступ к полям: email, first_name, last_name, phone, date_joined."""
 
     class Meta:
         model = User
-        fields = ["email", "first_name", "last_name", "phone"]
+        fields = ["email", "first_name", "last_name", "phone", "date_joined"]
+
+
+class UserMinInfoSerializer(serializers.ModelSerializer):
+    """Дополнительная сериализация модели User для обычных пользователей. Предоставлен доступ к полям: last_name,
+    first_name, date_joined."""
+
+    class Meta:
+        model = User
+        fields = ["last_name", "first_name", "date_joined"]
 
 
 class RegisterUserSerializer(serializers.ModelSerializer):
