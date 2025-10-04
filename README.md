@@ -65,21 +65,29 @@ poetry install
 │     ├── asgi.py, settings.py, urls.py, wsgi.py необходимые модули для работы приложения
 ├──ads  - приложение на django
 │ ├── migrations - папка с миграциями
-│ ├── admin.py, apps.py, models.py, paginators.py, serializers.py, tests.py, urls.py, validators.py, views.py,
- tasks.py, services.py - модули для работы приложения
+│ ├── admin.py, apps.py, models.py, paginators.py, serializers.py, tests.py, urls.py, views.py - модули для работы
+приложения
+├──config  - настройки django
+├──tests  - тесты приложений
+│ ├── ad_reviews - пакет с фикстурами, тестами модулей Ad, Review
+│ ├── user - пакет с фикстурами, тестами модуля User
 ├── users - приложение на django
 │ ├── management
 │     ├── commands - папка с командами
 │         ├── createadmin - команда для создания суперпользователя(админа)
 │ ├── migrations - папка с миграциями
-│ ├── admin.py, apps.py, models.py, oermissions.py, serializers.py, services.py, tests.py, urls.py, views.py - модули
-для работы приложения
+│ ├── admin.py, apps.py, models.py, permissions.py, serializers.py, tests.py, urls.py, views.py - модулидля работы
+приложения
 ├── .env.example - env экземпляр для доступа к закрытым данным
 ├── .flake8
 ├── .gitignore
+├── docker-compose.yml - контейнер проекта в docker hub
+├── Dockerfile - файл для создания образа
 ├── manage.py
 ├── pyproject.toml
 ├── poetry.lock
+├── pytest.ini - файл настройки pytest
+├── requirements.txt - файл с зависимостями
 └── README.md
 ```
 
@@ -203,7 +211,10 @@ phone, email, date_joined.
 
 ## Тестирование<a id="tests"></a>
 
-В приложении протестировано:
+Приложения протестированы с помощью pytest:
+1. Функционал модели и контроллеров User.
+2. Функционал модели и контроллеров Ad.
+3. Функционал модели и контроллеров Review.
 
 ---
 
