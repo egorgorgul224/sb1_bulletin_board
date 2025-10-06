@@ -18,9 +18,10 @@
    - [Приложение Users](#users_app)
      - [Модели](#users_models) 
      - [Контроллеры и ссылки](#users_controllers)
+     - [Вспомогательные функции](#users_services)
      - [Сериализация](#users_serialize)
      - [Классы разрешений](#users_permissions)
-5. [Тестирование](#tests)
+5. [Тестирование и запуск](#tests)
 6. [Запуск и тестирование проекта, документация](#launch)
 7. [Запуск и тестирование с помощью Docker Compose](#docker)
 8. [Лицензия](#license)
@@ -52,6 +53,10 @@ cd ваш_проект
 ```
 poetry install
 ```
+или
+```
+pip install -r requirements.txt
+```
 
 4. Зайдите в файл .env.example и следуйте инструкциям из него.
 
@@ -76,7 +81,7 @@ poetry install
 │     ├── commands - папка с командами
 │         ├── createadmin - команда для создания суперпользователя(админа)
 │ ├── migrations - папка с миграциями
-│ ├── admin.py, apps.py, models.py, permissions.py, serializers.py, tests.py, urls.py, views.py - модулидля работы
+│ ├── admin.py, apps.py, models.py, permissions.py, serializers.py, tests.py, urls.py, views.py - модули для работы
 приложения
 ├── .env.example - env экземпляр для доступа к закрытым данным
 ├── .flake8
@@ -177,16 +182,25 @@ poetry install
    - Контроллер UserRetrieveAPIView для вывода информации о пользователе.
    - Контроллер UserUpdateAPIView для обновления информации о пользователе.
    - Контроллер UserDestroyAPIView для удаления пользователя.
+   - Контроллер UserResetPassword для сброса пароля и отправки сообщения на email пользователя.
+   - Контроллер UserResetPasswordConfirm подтверждения сброса пароля и установки нового пароля.
 
 ```
 Ссылка для контроллера UserCreateAPIView: адрес/register/
 Ссылка для контроллера авторизации и получения токена TokenObtainPairView: адрес/login/
 Ссылка для контроллера обновления токена TokenRefreshView: адрес/token/refresh/
+Ссылка для контроллера UserResetPassword: адрес/reset_password/
+Ссылка для контроллера UserResetPasswordConfirm: адрес/reset_password_confirm/
 Ссылка для контроллера UserListAPIView: адрес/users/
 Ссылка для контроллера UserRetrieveAPIView: адрес/user/id_пользователя/detail/
 Ссылка для контроллера UserUpdateAPIView: адрес/user/id_пользователя/update/
 Ссылка для контроллера UserDestroyAPIView: адрес/user/id_пользователя/delete/
 ```
+
+### Вспомогательные функции Services<a id="user_services"></a>
+
+В приложении реализованы следующие вспомогательные функции:
+1. **send_password_reset_email** - функция отправляет сообщение сброса пароля на почту пользователя.
 
 ### Сериализация<a id="users_serialize"></a>
 
@@ -209,12 +223,17 @@ phone, email, date_joined.
 
 ---
 
-## Тестирование<a id="tests"></a>
+## Тестирование и запуск<a id="tests"></a>
 
 Приложения протестированы с помощью pytest:
 1. Функционал модели и контроллеров User.
 2. Функционал модели и контроллеров Ad.
 3. Функционал модели и контроллеров Review.
+
+Для запуска и проверки тестов использовать:
+```
+pytest --cov
+```
 
 ---
 
@@ -236,21 +255,12 @@ http://127.0.0.1:8000/redoc/ - документация в redoc
 данных(PostgreSQL) и др.).
 
 Запуск:
-1. Клонируйте репозиторий:
+1. Установите Docker.
+2. Введите команду для создания и запуска Docker Compose в фоновом режиме.
 ```
-git clone https://github.com/username/project-x.git
+docker-compose up -d --build --force-recreate
 ```
-2. Перейдите в директорию проекта:
-```
-cd ваш_проект
-```
-3. Зайдите в файл .env.example и следуйте инструкциям из него.
-4. Установите Docker.
-5. Введите команду для создания и запуска Docker Compose в фоновом режиме.
-```
-docker-compose up -d --build
-```
-6. Проверить работоспособность Docker Compose можно:
+3. Проверить работоспособность Docker Compose можно:
 - проверить сервер по адресу:
 ```
 http://localhost:8000/
@@ -285,7 +295,7 @@ docker-compose ps
 ```
 docker-compose logs
 ```
-7. Для остановки и/или удаления используйте команду:
+4. Для остановки и/или удаления используйте команду:
 ```
 docker-compose stop
 или с удалением контейнера:
