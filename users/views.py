@@ -65,11 +65,11 @@ class UserListAPIView(generics.ListAPIView):
     queryset = User.objects.filter(is_staff=False)
 
     def get_serializer_class(self):
-        """Метод для вывода необходимого сериализатора. Если пользователь 'staff' или 'admin' - выводится вся
-        информация через UserSerializer, иначе только часть информации через UserMinInfoSerializer."""
+        """Метод для вывода необходимого сериализатора. Если пользователь 'staff' - выводится вся информация через
+        UserSerializer, иначе только часть информации через UserMinInfoSerializer."""
 
         user = self.request.user
-        if user.is_staff or user.role == "admin":
+        if user.is_staff:
             return UserSerializer
         return UserMinInfoSerializer
 

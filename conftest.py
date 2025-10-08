@@ -29,6 +29,13 @@ def admin_api_client(api_client: APIClient, admin: User) -> APIClient:
 
 
 @pytest.fixture
+def user() -> User:
+    """Фикстура пользователя."""
+
+    return User.objects.create(email="user@mail.ru")
+
+
+@pytest.fixture
 def user_first() -> User:
     """Фикстура пользователя для проверки отзывов."""
 
