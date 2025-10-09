@@ -10,21 +10,21 @@
 2. [Установка и настройка проекта](#instruction)
 3. [Структура проекта](#structure)
 4. [Приложения](#apps)
-   - [Приложение Habits](#ads_app)
+   - [Приложение Ads](#ads_app)
      - [Модели](#ads_models) 
      - [Контроллеры и ссылки](#ads_controllers)
-     - [Вспомогательные функции](#ads_services)
      - [Сериализация](#ads_serialize)
      - [Пагинаторы](#ads_paginators)
-     - [Валидаторы](#ads_validators)
    - [Приложение Users](#users_app)
      - [Модели](#users_models) 
      - [Контроллеры и ссылки](#users_controllers)
+     - [Вспомогательные функции](#users_services)
      - [Сериализация](#users_serialize)
      - [Классы разрешений](#users_permissions)
-5. [Тестирование](#tests)
+5. [Тестирование и запуск](#tests)
 6. [Запуск и тестирование проекта, документация](#launch)
-7. [Лицензия](#license)
+7. [Запуск и тестирование с помощью Docker Compose](#docker)
+8. [Лицензия](#license)
 
 ---
 
@@ -53,6 +53,10 @@ cd ваш_проект
 ```
 poetry install
 ```
+или
+```
+pip install -r requirements.txt
+```
 
 4. Зайдите в файл .env.example и следуйте инструкциям из него.
 
@@ -66,22 +70,29 @@ poetry install
 │     ├── asgi.py, settings.py, urls.py, wsgi.py необходимые модули для работы приложения
 ├──ads  - приложение на django
 │ ├── migrations - папка с миграциями
-│ ├── admin.py, apps.py, models.py, paginators.py, serializers.py, tests.py, urls.py, validators.py, views.py,
- tasks.py, services.py - модули для работы приложения
+│ ├── admin.py, apps.py, models.py, paginators.py, serializers.py, tests.py, urls.py, views.py - модули для работы
+приложения
+├──config  - настройки django
+├──tests  - тесты приложений
+│ ├── ad_reviews - пакет с фикстурами, тестами модулей Ad, Review
+│ ├── user - пакет с фикстурами, тестами модуля User
 ├── users - приложение на django
 │ ├── management
 │     ├── commands - папка с командами
 │         ├── createadmin - команда для создания суперпользователя(админа)
 │ ├── migrations - папка с миграциями
-│ ├── templates - папка с шаблонами страниц
-│ ├── admin.py, apps.py, models.py, oermissions.py, serializers.py, services.py, tests.py, urls.py, views.py - модули
-для работы приложения
+│ ├── admin.py, apps.py, models.py, permissions.py, serializers.py, tests.py, urls.py, views.py - модули для работы
+приложения
 ├── .env.example - env экземпляр для доступа к закрытым данным
 ├── .flake8
 ├── .gitignore
+├── docker-compose.yml - контейнер проекта в docker hub
+├── Dockerfile - файл для создания образа
 ├── manage.py
 ├── pyproject.toml
 ├── poetry.lock
+├── pytest.ini - файл настройки pytest
+├── requirements.txt - файл с зависимостями
 └── README.md
 ```
 
@@ -97,43 +108,58 @@ poetry install
 
 ## Приложение Ads <a id="ads_app"></a>
 
-Приложение **ads** создано для создания/редактирования/удаления и ведения привычек.
+Приложение **ads** создано для создания/редактирования/удаления и ведения объявлений и отзывов.
 
 Ниже будут описаны модели, контроллеры + ссылки, сериализации.
 
 ### Модели<a id="ads_models"></a>
 
 В приложении созданы следующие модели:
-- Ads - приложение .
+- Ad - модель объявление. Содержит поля title, price, description, author, created_at.
+- Review - модель отзыв. Содержит поля text, author, ad, created_at.
 
 ### Контроллеры и ссылки<a id="ads_controllers"></a>
 
-1. Контроллеры модели **Ads**.
-   - Контроллер AdsCreateAPIView для создания объявления.
+1. Контроллеры модели **Ad**.
+   - Контроллер AdCreateAPIView для создания объявления.
+   - Контроллер AdListAPIView для вывода списка своих объявлений(если admin, то всех).
+   - Контроллер AdRetrieveAPIView для вывода информации об объявлении.
+   - Контроллер AdUpdateAPIView для обновления информации объявления.
+   - Контроллер AdDestroyAPIView для удаления объявления.
 
 ```
-Ссылка для контроллера AdsListAPIView: адрес//
+Ссылка для контроллера AdCreateAPIView: адрес/ad/create/
+Ссылка для контроллера AdListAPIView: адрес/ads/
+Ссылка для контроллера AdRetrieveAPIView: адрес/ad/id_объявления/detail/
+Ссылка для контроллера AdUpdateAPIView: адрес/ad/id_объявления/update/
+Ссылка для контроллера AdDestroyAPIView: адрес/ad/id_объявления/delete/
 ```
 
-### Вспомогательные функции Services<a id="ads_services"></a>
+2. Контроллеры модели **Review**.
+   - Контроллер ReviewCreateAPIView для создания отзыва.
+   - Контроллер ReviewListAPIView для вывода списка отзывов.
+   - Контроллер ReviewRetrieveAPIView для вывода информации об отзыве.
+   - Контроллер ReviewUpdateAPIView для обновления информации отзыва.
+   - Контроллер ReviewDestroyAPIView для удаления отзыва.
 
-В приложении реализованы следующие вспомогательные функции:
-1. **123** - функция .
+```
+Ссылка для контроллера ReviewCreateAPIView: адрес/review/create/
+Ссылка для контроллера ReviewListAPIView: адрес/ad/id_объявления/reviews/
+Ссылка для контроллера ReviewRetrieveAPIView: адрес/review/id_отзыва/detail/
+Ссылка для контроллера ReviewUpdateAPIView: адрес/review/id_отзыва/update/
+Ссылка для контроллера ReviewDestroyAPIView: адрес/review/id_отзыва/delete/
+```
 
 ### Сериализация<a id="ads_serialize"></a>
 
 Реализованы следующие сериализации:
-1. **123** - сериализация модели Habit. Предоставлен доступ ко всем полям, кроме owner.
+1. **AdSerializer** - сериализация модели Ad. Предоставлен доступ ко всем полям, кроме author.
+2. **ReviewSerializer** - сериализация модели Review. Предоставлен доступ ко всем полям, кроме author, created_at.
 
 ### Пагинаторы<a id="ads_paginators"></a>
 
-Реализована следующие пагинаторы:
-1. **123** - пагинатор для .
-
-### Валидаторы<a id="ads_validators"></a>
-
-Реализованы следующие валидаторы:
-1. **123** - класс-валидатор для .
+Реализованs следующие пагинаторы:
+1. **AdListPaginator** - пагинатор для вывода списка объявлений. Выводит 4 элемента на страницу.
 
 ---
 
@@ -146,33 +172,68 @@ poetry install
 ### Модели<a id="users_models"></a>
 
 В приложении созданы следующие модели:
-- User - модель пользователь. Содержит поля .
+- User - модель пользователь. Содержит поля email, role, phone, image, token.
 
 ### Контроллеры и ссылки<a id="users_controllers"></a>
 
 1. Контроллеры модели **User**.
    - Контроллер UserCreateAPIView для регистрации/создания пользователя.
+   - Контроллер UserListAPIView для вывода списка пользователей.
+   - Контроллер UserRetrieveAPIView для вывода информации о пользователе.
+   - Контроллер UserUpdateAPIView для обновления информации о пользователе.
+   - Контроллер UserDestroyAPIView для удаления пользователя.
+   - Контроллер UserResetPassword для сброса пароля и отправки сообщения на email пользователя.
+   - Контроллер UserResetPasswordConfirm подтверждения сброса пароля и установки нового пароля.
 
 ```
 Ссылка для контроллера UserCreateAPIView: адрес/register/
+Ссылка для контроллера авторизации и получения токена TokenObtainPairView: адрес/login/
+Ссылка для контроллера обновления токена TokenRefreshView: адрес/token/refresh/
+Ссылка для контроллера UserResetPassword: адрес/reset_password/
+Ссылка для контроллера UserResetPasswordConfirm: адрес/reset_password_confirm/
+Ссылка для контроллера UserListAPIView: адрес/users/
+Ссылка для контроллера UserRetrieveAPIView: адрес/user/id_пользователя/detail/
+Ссылка для контроллера UserUpdateAPIView: адрес/user/id_пользователя/update/
+Ссылка для контроллера UserDestroyAPIView: адрес/user/id_пользователя/delete/
 ```
+
+### Вспомогательные функции Services<a id="user_services"></a>
+
+В приложении реализованы следующие вспомогательные функции:
+1. **send_password_reset_email** - функция отправляет сообщение сброса пароля на почту пользователя.
 
 ### Сериализация<a id="users_serialize"></a>
 
 Реализованы следующие сериализации:
 1. **UserSerializer** - сериализатор для модели User. В Meta класс предоставлен доступ к полям: first_name, last_name,
-city, phone, tg_chat_id.
+phone, email, date_joined.
+2. **UserMinInfoSerializer** - Дополнительная сериализация модели User для обычных пользователей. Предоставлен доступ
+к полям: last_name, first_name, date_joined.
+3. **RegisterUserSerializer** - сериализатор для контроллера UserCreateAPIView. Используется для регистрации/создания
+пользователя. Предоставлен доступ к полям: email.
 
 ### Классы разрешений<a id="users_permissions"></a>
 
 Реализованы следующие разрешения:
-1. **123** - проверяет, что пользователь .
+1. **IsAdReviewOwner** - проверяет, что пользователь является создателем объявления или отзыва. Если владелец -
+возвращает True, иначе False.
+2. **IsAccountOwner** - проверяет, что пользователь является владельцем аккаунта. Если владелец - возвращает True,
+иначе False.
+3. **IsAdmin** - проверяет, что пользователь является админом. Если админ - возвращает True, иначе False.
 
 ---
 
-## Тестирование<a id="tests"></a>
+## Тестирование и запуск<a id="tests"></a>
 
-В приложении протестировано:
+Приложения протестированы с помощью pytest:
+1. Функционал модели и контроллеров User.
+2. Функционал модели и контроллеров Ad.
+3. Функционал модели и контроллеров Review.
+
+Для запуска и проверки тестов использовать:
+```
+pytest --cov
+```
 
 ---
 
@@ -183,6 +244,62 @@ city, phone, tg_chat_id.
 3. Для просмотра документации введите в адресной строке:
 ```
 http://127.0.0.1:8000/swagger/ - документация в swagger
+http://127.0.0.1:8000/redoc/ - документация в redoc
+```
+
+---
+
+## Запуск и тестирование с помощью Docker Compose<a id="docker"></a>
+
+С помощью Docker Compose можно запустить все необходимые для проекта сервисы в одной оболочке(веб-приложение, базу
+данных(PostgreSQL) и др.).
+
+Запуск:
+1. Установите Docker.
+2. Введите команду для создания и запуска Docker Compose в фоновом режиме.
+```
+docker-compose up -d --build --force-recreate
+```
+3. Проверить работоспособность Docker Compose можно:
+- проверить сервер по адресу:
+```
+http://localhost:8000/
+или
+http://127.0.0.1:8000/
+```
+- проверить документацию или admin-панель:
+```
+http://127.0.0.1:8000/swagger/
+и
+http://127.0.0.1:8000/admin/
+```
+- для добавления админа и входа в базу данных используйте команды:
+```
+создание админа:
+docker-compose run web python manage.py createadmin
+
+входа в базу данных:
+docker exec -it django_rest_homework-db-1  psql -U postgres materials
+
+проверка всех таблиц в базе данных:
+\dt
+
+пример для проверки пользователей:
+SELECT * FROM users_user;
+```
+- ввести в терминал команду, запущенные команды будут иметь status "Up":
+```
+docker-compose ps
+```
+- ввести в терминал команду для просмотра логов по каждому сервису:
+```
+docker-compose logs
+```
+4. Для остановки и/или удаления используйте команду:
+```
+docker-compose stop
+или с удалением контейнера:
+docker-compose down
 ```
 
 ---
